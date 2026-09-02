@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mololuwa Model School — Afin Akoko, Ondo State</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        :root { --navy: #0f2e44; --gold: #f5a623; --light: #f8fafc; --text: #333; --red: #dc2626; }
+        body { line-height: 1.7; color: var(--text); }
+
+        /* ========== LOGIN PANEL ========== */
+        .login-panel { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: none; justify-content: center; align-items: center; }
+        .login-panel.active { display: flex; }
+        .login-box { background: white; padding: 2rem; border-radius: 12px; width: 90%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); position: relative; }
+        .login-box h3 { text-align: center; color: var(--navy); margin-bottom: 1.5rem; font-size: 1.5rem; }
+        .login-box input { width: 100%; padding: 0.9rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 6px; font-size: 1rem; }
+        .login-box button { width: 100%; padding: 0.9rem; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn-login { background: var(--navy); color: white; margin-bottom: 0.8rem; }
+        .btn-login:hover { background: #1a4a6e; }
+        .btn-close { background: #e5e7eb; color: var(--text); }
+        .login-error { color: var(--red); margin-top: 0.5rem; display: none; }
+        .user-area { display: flex; align-items: center; gap: 0.8rem; }
+        .user-info { color: white; font-size: 0.95rem; display: none; }
+        .logout-btn { background: var(--gold); color: var(--navy); border: none; padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-weight: 600; display: none; }
+        .login-btn { background: var(--gold); color: var(--navy); border: none; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 0.95rem; }
+
+        /* ========== HEADER & LOGO ========== */
+        header { background: var(--navy); color: white; padding: 1rem 5%; position: sticky; top: 0; z-index: 100; }
+        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; }
+        .logo-wrap { display: flex; align-items: center; gap: 0.8rem; }
+        .school-logo { width: 55px; height: 55px; border-radius: 50%; background: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; color: var(--navy); font-weight: bold; }
+        .logo-text { font-size: 1.15rem; font-weight: 700; color: var(--gold); line-height: 1.3; }
+        nav ul { display: flex; list-style: none; gap: 1.5rem; align-items: center; }
+        nav a { color: white; text-decoration: none; font-weight: 500; transition: color 0.3s; }
+        nav a:hover { color: var(--gold); }
+        .menu-btn { display: none; font-size: 1.8rem; cursor: pointer; }
+
+        /* ========== ANNOUNCEMENT BANNER ========== */
+        .announcement-bar { background: var(--gold); color: var(--navy); padding: 0.7rem 5%; font-weight: 600; text-align: center; position: relative; overflow: hidden; }
+        .announcement-text { animation: scroll 20s linear infinite; display: inline-block; white-space: nowrap; }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        .announcement-card { background: #fff3e0; border-left: 4px solid var(--gold); padding: 1.2rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0; }
+        .announcement-card .date { font-size: 0.85rem; color: #886000; font-weight: 600; margin-bottom: 0.3rem; }
+
+        /* ========== HERO ========== */
+        .hero { background: linear-gradient(rgba(15,46,68,0.85), rgba(15,46,68,0.85)), url('https://images.unsplash.com/photo-1523050854058-8df90110c7f1?w=1200') center/cover; color: white; padding: 4.5rem 5%; text-align: center; }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 1rem; color: var(--gold); line-height: 1.3; }
+        .hero p { font-size: 1.1rem; margin-bottom: 2rem; max-width: 800px; margin-left: auto; margin-right: auto; }
+        .btn { display: inline-block; background: var(--gold); color: var(--navy); padding: 0.9rem 2rem; border-radius: 6px; text-decoration: none; font-weight: 600; transition: transform 0.3s; border: none; cursor: pointer; font-size: 1rem; }
+        .btn:hover { transform: translateY(-3px); }
+
+        /* ========== SECTIONS ========== */
+        section { padding: 3.5rem 5%; max-width: 1200px; margin: 0 auto; }
+        h2 { text-align: center; font-size: 2rem; color: var(--navy); margin-bottom: 2.5rem; position: relative; }
+        h2::after { content: ''; width: 75px; height: 4px; background: var(--gold); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
+
+        /* ========== ABOUT ========== */
+        .about-block { margin-bottom: 2rem; }
+        .about-block h3 { color: var(--navy); margin: 1.5rem 0 0.8rem; font-size: 1.4rem; }
+        .about-block p { margin-bottom: 1rem; text-align: justify; }
+        .vision-box { background: #fff7e8; border-left: 4px solid var(--gold); padding: 1.5rem; border-radius: 0 8px 8px 0; margin-top: 2rem; }
+        .vision-box h3 { color: var(--navy); margin-bottom: 0.5rem; }
+
+        /* ========== SCHOOL SECTIONS ========== */
+        .programs-bg { background: var(--light); max-width: 100%; }
+        .programs-container { max-width: 1200px; margin: 0 auto; }
+        .sections-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .section-card { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); text-align: center; transition: transform 0.3s; }
+        .section-card:hover { transform: translateY(-6px); }
+        .section-card h3 { color: var(--navy); margin: 1rem 0; font-size: 1.3rem; }
+        .section-icon { font-size: 2.5rem; }
+
+        /* ========== PHOTO GALLERY ========== */
+        .gallery-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+        .gallery-item { border-radius: 8px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.3s; }
+        .gallery-item:hover { transform: scale(1.03); }
+        .gallery-item img { width: 100%; height: 180px; object-fit: cover; display: block; }
+        .gallery-caption { padding: 0.8rem; background: white; font-size: 0.9rem; text-align: center; color: var(--navy); font-weight: 500; }
+        .lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 9998; display: none; align-items: center; justify-content: center; }
+        .lightbox.active { display: flex; }
+        .lightbox img { max-width: 90%; max-height: 80%; border-radius: 8px; }
+        .lightbox-close { position: absolute; top: 20px; right: 30px; color: white; font-size: 2.5rem; cursor: pointer; }
+
+        /* ========== DAILY UPDATES / NEWS ========== */
+        .updates-list { display: flex; flex-direction: column; gap: 1rem; }
+        .update-card { background: white; padding: 1.2rem; border-radius: 8px; box-shadow: 0 3px 12px rgba(0,0,0,0.06); border-left: 3px solid var(--navy); }
+        .update-card.latest { border-left-color: var(--red); background: #fff5f5; }
+        .update-date { font-size: 0.85rem; color: #888; margin-bottom: 0.3rem; font-weight: 600; }
+        .update-card.latest .update-date { color: var(--red); }
+
+        /* ========== CONTACT ========== */
+        .contact-section { background: var(--light); max-width: 100%; }
+        .contact-container { max-width: 1200px; margin: 0 auto; }
+        .contact-info { background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 20px rgba(0,0,0,0.06); }
+        .info-item { margin-bottom: 1.2rem; font-size: 1.05rem; }
+        .info-item strong { color: var(--navy); }
+
+        /* ========== FOOTER ========== */
+        footer { background: var(--navy); color: white; padding: 2.5rem 5% 1.5rem; text-align: center; }
+        .footer-links { margin-bottom: 1.5rem; }
+        .footer-links a { color: #ccc; margin: 0 0.8rem; text-decoration: none; }
+        .footer-links a:hover { color: var(--gold); }
+        .copyright { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 1.2rem; color: #999; font-size: 0.9rem; line-height: 1.6; }
+
+        /* ========== MOBILE RESPONSIVE ========== */
+        @media (max-width: 768px) {
+            .menu-btn { display: block; }
+            nav ul { position: absolute; top: 100%; left: 0; right: 0; background: var(--navy); flex-direction: column; padding: 1rem 5%; gap: 1rem; display: none; }
+            nav ul.active { display: flex; }
+            .hero h1 { font-size: 1.7rem; }
+            .nav-container { justify-content: space-between; }
+            .user-area { margin-top: 0.5rem; width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ========== LOGIN MODAL ========== -->
+<div class="login-panel" id="loginPanel">
+    <div class="login-box">
+        <h3>🔐 Admin Login</h3>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <p class="login-error" id="loginError">❌ Invalid username or password!</p>
+            <button type="submit" class="btn-login">Login</button>
+            <button type="button" class="btn-close" onclick="closeLoginPanel()">Cancel</button>
+        </form>
+    </div>
+</div>
+
+<!-- ========== LIGHTBOX FOR GALLERY ========== -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <span class="lightbox-close">&times;</span>
+    <img src="" alt="Enlarged photo" id="lightboxImg">
+</div>
+
+<!-- ========== ANNOUNCEMENT BAR ========== -->
+<div class="announcement-bar">
+    <span class="announcement-text">📢 IMPORTANT: 2026/2027 Admission in Progress! — Resumption Date: Monday, 22nd September 2026 — PTA Meeting: 15th November 2026 @ 10AM — All Parents are Expected to Attend!</span>
+</div>
+
+<!-- ========== HEADER WITH LOGO ========== -->
+<header>
+    <div class="nav-container">
+        <div class="logo-wrap">
+            <div class="school-logo">M</div>
+            <div class="logo-text">Mololuwa Model School<br><small>Afin Akoko, Ondo State</small></div>
+        </div>
+        <nav>
+            <div class="menu-btn" onclick="toggleMenu()">☰</div>
+            <ul id="navLinks">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#sections">Our Sections</a></li>
+                <li><a href="#announcements">Announcements</a></li>
+                <li><a href="#gallery">Photo Gallery</a></li>
+                <li><a href="#updates">Daily Updates</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li class="user-area">
+                    <span class="user-info" id="userInfo">Welcome, Admin</span>
+                    <button class="login-btn" id="loginBtn" onclick="openLoginPanel()">Admin Login</button>
+                    <button class="logout-btn" id="logoutBtn" onclick="logout()">Logout</button>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- ========== HERO SECTION ========== -->
+<section class="hero" id="home">
+    <h1>Welcome to Mololuwa Model School</h1>
+    <p>Afin Akoko, Ondo State — Established 2006 · Quality Education · Discipline · Character Building · Academic Excellence</p>
+    <a href="#contact" class="btn">📚 Enroll Your Child</a>
+</section>
+
+<!-- ========== ABOUT SECTION ========== -->
+<section id="about">
+    <h2>About Our School</h2>
+    <div class="about-block">
+        <h3>MOLOLUWA MODEL SCHOOL<br>Afin Akoko, Ondo State</h3>
+        <p>Mololuwa Model School is a reputable educational institution located in Afin Akoko, Ondo State, Nigeria. The school was established in 2006 by Miss Alabi Opeyemi with the vision of providing quality education and creating a strong foundation for children in the community.</p>
+
+        <p>From its humble beginning, Mololuwa Model School started with its primary section, which gradually grew and gained recognition through its commitment to academic excellence, discipline, good character, and quality learning. As the school continued to develop, more parents began to trust the institution with the education and future of their children.</p>
+
+        <p>In 2012, the secondary section of the school was acquired by the great man, Mr. Obalulowa Albert OBA, who continued to build upon the foundation that had already been established. Under his leadership and vision, the school experienced further growth and development, becoming one of the respected schools in the town.</p>
+
+        <p>Over the years, Mololuwa Model School has continued to grow in both academic and physical development. The school now has its own permanent building and facilities, providing students with a more conducive environment for learning.</p>
+
+        <p>Today, Mololuwa Model School continues to stand as a school committed to quality education, discipline, character development, and the preparation of students for a successful future. The institution remains an important part of the community and continues to contribute to the educational development of young people in Afin Akoko and beyond.</p>
+
+        <div class="vision-box">
+            <h3>🎯 Our Vision</h3>
+            <p><em>To provide quality and affordable education that develops students academically, morally, socially, and intellectually.</em></p>
+        </div>
+    </div>
+</section>
+
+<!-- ========== SCHOOL SECTIONS ========== -->
+<section id="sections" class="programs-bg">
+    <div class="programs-container">
+        <h2>Our School Sections</h2>
+        <div class="sections-grid">
+            <div class="section-card">
+                <div class="section-icon">🍼</div>
+                <h3>Creche</h3>
+                <p>Early childhood care and nurturing for our youngest learners — a warm, safe, and loving environment to start their journey.</p>
+            </div>
+            <div class="section-card">
+                <div class="section-icon">🎒</div>
+                <h3>Nursery</h3>
+                <p>Foundational learning through play, creativity, and basic skills development. Preparing children for primary education with confidence.</p>
+            </div>
+            <div class="section-card">
+                <div class="section-icon">📖</div>
+                <h3>Primary School</h3>
+                <p>Strong academic foundation covering all core subjects. Focus on literacy, numeracy, and moral values — established since 2006.</p>
+            </div>
+            <div class="section-card">
+                <div class="section-icon">🎓</div>
+                <h3>Secondary School</h3>
+                <p>Comprehensive education for JSS & SSS — Sciences, Arts, and Commercial streams. Preparing students for WAEC, NECO & JAMB. Established under the leadership of Mr. Obalulowa Albert OBA since 2012.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== ANNOUNCEMENTS SECTION ========== -->
+<section id="announcements">
+    <h2>📢 Announcements & Notices</h2>
+    <div class="announcement-card">
+        <div class="date">🔴 NEW — September 2, 2026</div>
+        <h3>2026/2027 Admission Now Open</h3>
+        <p>Entry forms are available for Creche, Nursery, Primary, and Secondary sections. Visit the school admin office during working hours to collect your form. Registration closes October 31st, 2026.</p>
+    </div>
+    <div class="announcement-card">
+        <div class="date">🟡 August 28, 2026</div>
+        <h3>Resumption Date</h3>
+        <p>All pupils and students are to resume for the new academic session on <strong>Monday, 22nd September 2026</strong>. Parents are advised to ensure their wards come with all required materials.</p>
+    </div>
+    <div class="announcement-card">
+        <div class="date">📅 November 2026</div>
+        <h3>General PTA Meeting</h3>
+        <p>All parents are invited to our General PTA Meeting. Date: <strong>Sunday, 15th November 2026 @ 10:00 AM</strong> at the school hall. Attendance is highly encouraged.</p>
+    </div>
+    <div class="announcement-card">
+        <div class="date">🏫 October 2026</div>
+        <h3>Annual Inter-House Sports Competition</h3>
+        <p>Mark your calendars! Our annual Inter-House Sports comes up on <strong>Friday, 30th October 2026</strong>. Come and cheer for your favorite house!</p>
+    </div>
+</section>
+
+<!-- ========== PHOTO GALLERY / MEMORIES ========== -->
+<section id="gallery" class="programs-bg">
+    <div class="programs-container">
+        <h2>📸 Photo Gallery — Our Memories</h2>
+        <p style="text-align:center; margin-bottom:2rem; color:var(--navy);">Click any photo to view it larger</p>
+        <div class="gallery-grid">
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=600')">
+                <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400" alt="School Building">
+                <div class="gallery-caption">Our School Compound</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600')">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400" alt="Classroom Activities">
+                <div class="gallery-caption">Classroom Learning</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1577896851231-70ef1888d906?w=600')">
+                <img src="https://images.unsplash.com/photo-1577896851231-70ef1888d906?w=400" alt="Students in Class">
+                <div class="gallery-caption">Our Students</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=600')">
+                <img src="https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400" alt="Graduation Ceremony">
+                <div class="gallery-caption">Graduation Ceremony</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1571260829183-4ae35061d45d?w=600')">
+                <img src="https://images.unsplash.com/photo-1571260829183-4ae35061d45d?w=400" alt="Sports Day">
+                <div class="gallery-caption">Annual Sports Day</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1580582932943-6a7d3a820d3a?w=600')">
+                <img src="https://images.unsplash.com/photo-1580582932943-6a7d3a820d3a?w=400" alt="Cultural Day">
+                <div class="gallery-caption">Cultural Day Celebration</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1599689541554-4d028a5b58a2?w=600')">
+                <img src="https://images.unsplash.com/photo-1599689541554-4d028a5b58a2?w=400" alt="Library & Reading">
+                <div class="gallery-caption">Reading & Library</div>
+            </div>
+            <div class="gallery-item" onclick="openLightbox('https://images.unsplash.com/photo-1529390574084-cca0a08a60d6?w=600')">
+                <img src="https://images.unsplash.com/photo-1529390574084-cca0a08a60d6?w=400" alt="School Assembly">
+                <div class="gallery-caption">Morning Assembly</div>
+            </div>
+        </div>
+        <p style="text-align:center; margin-top:2rem; font-style:italic;">📷 <strong>Admin Note:</strong> Log in to add new photos to the gallery!</p>
+    </div>
+</section>
+
+<!-- ========== DAILY UPDATES SECTION ========== -->
+<section id="updates">
+    <h2>📰 Daily Updates & News</h2>
+    <div class="updates-list">
+        <div class="update-card latest">
+            <div class="update-date">🔴 TODAY — September 2, 2026</div>
+            <h3>Welcome Back!</h3>
+            <p>We welcome all our pupils, students, parents, and staff back to school! Let's make this session a great one filled with learning, growth, and success.</p>
+        </div>
+        <div class="update-card">
+            <div class="update-date">September 1, 2026</div>
+            <h3>New Academic Year Preparations</h3>
+            <p>Teachers and staff have resumed to prepare for the new session. Classrooms are being arranged, lesson plans are being set, and everything is getting ready for resumption.</p>
+        </div>
+        <div class="update-card">
+            <div class="update-date">August 30, 2026</div>
+            <h3>Uniform & Textbook Sales</h3>
+            <p>School uniforms, textbooks, and notebooks are now available at the school admin office. Parents are encouraged to purchase early to avoid rush.</p>
+        </div>
+        <div class="update-card">
+            <div class="update-date">August 25, 2026</div>
+            <h3>New Admission List Released</h3>
+            <p>Congratulations to all successful applicants for 2026/2027 academic year! Check the notice board at the school gate for your names. Payment of fees should be made before resumption.</p>
+        </div>
+        <div class="update-card">
+            <div class="update-date">August 20, 2026</div>
+            <h3>Holiday Assignments</h3>
+            <p>All students are expected to complete their holiday assignments before resumption. Assignments will be collected and marked on the first day of resumption. Be prepared!</p>
+        </div>
+    </div>
+    <p style="text-align:center; margin-top:2rem; font-style:italic; color:#666;">📌 <strong>Daily updates will be posted here by the school admin — check back often!</strong></p>
+</section>
+
+<!-- ========== CONTACT SECTION ========== -->
+<section class="contact-section" id="contact">
+    <h2>Contact Us</h2>
+    <div class="contact-container">
+        <div class="contact-info">
+            <div class="info-item">📍 <strong>Address:</strong> Mololuwa Model School, Afin Akoko, Ondo State, Nigeria</div>
+            <div class="info-item">📞 <strong>Phone 1:</strong> +234 903 466 4455</div>
+            <div class="info-item">📞 <strong>Phone 2:</strong> +234 704 053 9050</div>
+            <div class="info-item">✉️ <strong>Email:</strong> info@mololuwamodelschool.edu.ng</div>
+            <div class="info-item">🕐 <strong>School Hours:</strong> Monday – Friday: 7:30 AM – 3:30 PM</div>
+            <div class="info-item">🏫 <strong>Established:</strong> 2006 · Permanent Site · Full Facilities</div>
+        </div>
+    </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+    <div class="footer-links">
+        <a href="#home">Home</a> |
+        <a href="#about">About</a> |
+        <a href="#sections">Our Sections</a> |
+        <a href="#announcements">Announcements</a> |
+        <a href="#gallery">Gallery</a> |
+        <a href="#updates">Updates</a> |
+        <a href="#contact">Contact</a>
+    </div>
+    <div class="copyright">
+        © 2026 Mololuwa Model School. All Rights Reserved.<br>
+        Afin Akoko, Ondo State · Established 2006 · Quality Education for All
+    </div>
+</footer>
+
+<!-- ========== JAVASCRIPT FOR ALL FEATURES ========== -->
+<script>
+    // ========== MOBILE MENU ==========
+    function toggleMenu() {
+        const navLinks = document.getElementById('navLinks');
+        navLinks.classList.toggle('active');
+    }
+    document.querySelectorAll('#navLinks a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('navLinks').classList.remove('active');
+        });
+    });
+
+    // ========== LOGIN SYSTEM ==========
+    const adminUser = "admin";
+    const adminPass = "school123"; // 🔐 CHANGE THIS TO YOUR OWN PASSWORD!
+
+    function openLoginPanel() {
+        document.getElementById('loginPanel').classList.add('active');
+        document.getElementById('username').focus();
+    }
+    function closeLoginPanel() {
+        document.getElementById('loginPanel').classList.remove('active');
+        document.getElementById('loginError').style.display = 'none';
+        document.getElementById('loginForm').reset();
+    }
+
+    // Check if already logged in on page load
+    window.onload = function() {
+        if (sessionStorage.getItem('schoolLoggedIn') === 'true') {
+            showLoggedInState();
+        }
+    };
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        
+        if (username === adminUser && password === adminPass) {
+            sessionStorage.setItem('schoolLoggedIn', 'true');
+            closeLoginPanel();
+            showLoggedInState();
+            alert('✅ Welcome, Admin! You can now manage the website.');
+        } else {
+            document.getElementById('loginError').style.display = 'block';
+        }
+    });
+
+    function showLoggedInState() {
+        document.getElementById('loginBtn').style.display = 'none';
+        document.getElementById('userInfo').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'block';
+    }
+
+    function logout() {
+        sessionStorage.removeItem('schoolLoggedIn');
+        document.getElementById('loginBtn').style.display = 'block';
+        document.getElementById('userInfo').style.display = 'none';
+        document.getElementById('logoutBtn').style.display = 'none';
+        alert('👋 Logged out successfully!');
+    }
+
+    // ========== GALLERY LIGHTBOX ==========
+    function openLightbox(imgSrc) {
+        document.getElementById('lightboxImg').src = imgSrc;
+        document.getElementById('lightbox').classList.add('active');
+    }
+    function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('active');
+    }
+</script>
+
+</body>
+</html>
